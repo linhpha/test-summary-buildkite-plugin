@@ -2,7 +2,7 @@
 
 set -eEuo pipefail
 
-DOCKER_REPO=linhpha/test-summary-buildkite-plugin
+DOCKER_REPO=test-summary-buildkite-plugin.tar
 
 on_failure() {
     echo "Command failed with exit status: $?"
@@ -16,17 +16,19 @@ trap on_failure ERR
 
 # cd to plugin directory
 cd "$( dirname "${BASH_SOURCE[0]}" )/.."
-TAG=$(git describe --tags --exact-match 2> /dev/null || true)
+# TAG=$(git describe --tags --exact-match 2> /dev/null || true)
 
-if [[ -n "$TAG" ]]; then
-    echo "Found tag $TAG, pulling from docker hub"
-    IMAGE="$DOCKER_REPO:$TAG"
-    docker pull "$IMAGE"
-else
-    echo "No tag found, building image locally"
-    IMAGE=test-summary:$BUILDKITE_JOB_ID
-    docker build -t "$IMAGE" .
-fi
+# if [[ -n "$TAG" ]]; then
+#     echo "Found tag $TAG, pulling from docker hub"
+#     IMAGE="$DOCKER_REPO:$TAG"
+#     docker pull "$IMAGE"
+# else
+#     echo "No tag found, building image locally"
+#     IMAGE=test-summary:$BUILDKITE_JOB_ID
+#     docker build -t "$IMAGE" .
+# fi
+
+docker load > "$DOCKER_REPO"
 
 docker run --rm \
   --mount type=bind,src=$(which buildkite-agent),dst=/usr/bin/buildkite-agent \
