@@ -29,6 +29,7 @@ cd "$( dirname "${BASH_SOURCE[0]}" )/.."
 # fi
 
 docker load > "$DOCKER_REPO"
+IMAGE=test-summary-buildkite-plugin
 
 docker run --rm \
   --mount type=bind,src=$(which buildkite-agent),dst=/usr/bin/buildkite-agent \
